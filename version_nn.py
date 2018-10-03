@@ -37,45 +37,38 @@ def conv2d(x, W):
 def max_pool_2x2(x):
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
-
 sess = tf.InteractiveSession()
 
-# paras
-W_conv1 = weight_varible([5, 5, 1, 32])
-b_conv1 = bias_variable([32])
-
-# conv layer-1
 ph_x = tf.placeholder(tf.float32, [None, 784])
 x_im = tf.reshape(ph_x, [-1, 28, 28, 1])
 ph_y = tf.placeholder(tf.int64, [None])
 y_onehot = tf.one_hot(ph_y, n_classes)
 ph_dp = tf.placeholder(tf.float32)
 
+# conv1
+W_conv1 = weight_varible([5, 5, 1, 32])
+b_conv1 = bias_variable([32])
 h_conv1 = tf.nn.relu(conv2d(x_im, W_conv1) + b_conv1)
 h_pool1 = max_pool_2x2(h_conv1)
 
-# conv layer-2
+# conv2
 W_conv2 = weight_varible([5, 5, 32, 64])
 b_conv2 = bias_variable([64])
-
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
 h_pool2 = max_pool_2x2(h_conv2)
 
 # full connection
 W_fc1 = weight_varible([7 * 7 * 64, 1024])
 b_fc1 = bias_variable([1024])
-
 h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
 # dropout
-
 h_fc1_drop = tf.nn.dropout(h_fc1, ph_dp)
 
-# output layer: softmax
+# logits
 W_fc2 = weight_varible([1024, 10])
 b_fc2 = bias_variable([10])
-
 logits = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 preds = tf.argmax(logits, 1)
 
@@ -119,15 +112,3 @@ for train_idx, test_idx in kf.split(test_X):
 
 submission = pd.DataFrame({"ImageId":range(1,n_test+1), "Label":res})
 submission.to_csv("nn_output.csv", index=False)
-    
-
-
-
-
-
-
-
-
-
-
-

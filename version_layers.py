@@ -21,7 +21,7 @@ n_classes = len(set(train_y))
 n_train = train_X.shape[0]
 n_test = test_X.shape[0]
 
-### layers version
+### layers version -----
 ph_x = tf.placeholder(tf.float32, [None, 28, 28, 1])
 ph_y = tf.placeholder(tf.int64, [None])
 y_onehot = tf.one_hot(ph_y, n_classes)
@@ -36,7 +36,7 @@ logits = tf.layers.dense(dp, n_classes, activation=tf.nn.softmax)
 
 preds = tf.argmax(logits, 1)
 
-# model training
+### model training -----
 cross_entropy = -tf.reduce_sum(y_onehot * tf.log(logits))
 mean_loss = tf.reduce_mean(cross_entropy)
 optimizer = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)

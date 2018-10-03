@@ -48,9 +48,9 @@ optimizer = RMSprop(lr=0.001)
 
 model.compile(optimizer = optimizer , loss = "categorical_crossentropy", metrics=["accuracy"])
 
+### training -----
 
-
-epochs = 30 # Turn epochs to 30 to get 0.9967 accuracy
+epochs = 30 
 batch_size = 86
 
 datagen = ImageDataGenerator(
@@ -69,8 +69,6 @@ datagen = ImageDataGenerator(
 datagen.fit(train_X)
 
 start = time.time()
-
-
 model.fit_generator(datagen.flow(train_X, train_y, batch_size=batch_size),
                     epochs = epochs,
                     validation_data = (val_X,val_y),
@@ -88,5 +86,3 @@ print("testing finished in {} seconds".format(time.time()-start))
 results = pd.Series(pred, name="Label")
 submission = pd.concat([pd.Series(range(1,28001),name = "ImageId"),results],axis = 1)
 submission.to_csv("cnn_mnist_datagen.csv",index=False)
-
-
